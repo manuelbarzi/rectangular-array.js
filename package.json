@@ -1,0 +1,21 @@
+{
+  "name": "rectangular-array.js",
+  "version": "0.0.0",
+  "description": "Math operations with Array of Arrays (Matrix) in JavaScript.",
+  "main": "rectangular-array.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manuelbarzi/rectangular-array.js.git"
+  },
+  "keywords": ["rectangular", "array", "rectangular-array", "array-of-arrays", "matrix", "math", "operations", "js", "rectangular-array.js"],
+  "author": "manuelbarzi",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "bugs": {
+    "url": "https://github.com/manuelbarzi/rectangular-array.js/issues"
+  },
+  "homepage": "https://github.com/manuelbarzi/rectangular-array.js#readme"
+}
