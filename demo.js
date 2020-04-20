@@ -1,4 +1,4 @@
-// initialize from a literal matrix (the same instance is used, no new array is created in memory)
+// initialize from a literal matrix
 var matrix = RectangularArray([[1, 2, 3], [4, 5, 6]]);
 
 // print it on the console
