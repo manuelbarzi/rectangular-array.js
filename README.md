@@ -2,7 +2,7 @@
 
 # Rectangular Array JS
 
-Math operations with Array of Arrays (Matrix) in JavaScript.
+Math operations with Rectangular Array (Matrix) in JavaScript.
 
 ## Install
 
@@ -102,4 +102,25 @@ console.log(matrix3.toString());
 // [				]
 // [				]
 // [				]
+
+// set value at row 10, column 10
+matrix.val(10, 10, 123)
+
+// print it on the console
+console.log(matrix.toString())
+// [1	2	3	10	 	 	 	 	 	 	 ]
+// [4	5	6	10	 	 	 	 	 	 	 ]
+// [7	8	9	10	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	123]
+
+// get value from row 10, column 10
+console.log(matrix.val(10, 10))
+// 123
 ```

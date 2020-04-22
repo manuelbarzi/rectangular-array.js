@@ -4,161 +4,197 @@
  * Math operations with Array of Arrays (Matrix) in JavaScript.
  * 
  * @author manuelbarzi
- * @version 0.0.1
+ * @version 0.0.2
  */
 var RectangularArray = (function () {
-    function create(m, n) {
-        if (!Number.isInteger(m)) throw TypeError(m + ' is not an integer');
+    function checkInteger(n, min) {
         if (!Number.isInteger(n)) throw TypeError(n + ' is not an integer');
+
+        if (!Number.isInteger(min)) throw TypeError(min + ' is not an integer');
+
+        if (n < min) throw Error(n + ' is not is greater than ' + min)
+    }
+
+    function slice(arguments, index) {
+        return Array.prototype.slice.call(arguments, index);
+    }
+
+    function checkArray(array) {
+        if (!(array instanceof Array)) throw TypeError(array + ' is not an array');
+    }
+
+    function create(m, n) {
+        checkInteger(m, 0);
+        checkInteger(n, 0);
 
         var ra = [];
 
         ra.m = m;
         ra.n = n;
 
-        mount(ra);
+        ra.row = function (j, row) {
+            checkInteger(j, 1);
 
-        return ra;
-    }
+            if (arguments.length == 1) {
+                j = j - 1;
 
-    function mount(ra) {
-        ra.row = function () {
-            if (arguments.length === 1)
-                return row(this, arguments[0]);
-            else if (arguments.length > 1)
-                return row(this, arguments[0], arguments[1]);
+                row = [];
+
+                for (var i = 0; i < this.n; i++)
+                    row[i] = this[i + j * this.n];
+
+                return row;
+            } else {
+                if (arguments.length == 2)
+                    checkArray(row)
+                else if (arguments.length > 2)
+                    row = slice(arguments, 1);
+
+                j = j - 1;
+
+                if (row.length > this.n) {
+                    var n = row.length;
+
+                    for (var _j = this.m - 1; _j >= 0; _j--)
+                        for (var _i = n - 1; _i >= 0; _i--)
+                            if (_i < this.n) this[_j * n + _i] = this[_j * this.n + _i];
+                            else delete this[_j * n + _i];
+
+                    this.n = n;
+                }
+
+                j >= this.m && (this.m = j + 1);
+
+                for (var i = 0; i < row.length; i++)
+                    this[i + j * this.n] = row[i];
+            }
         };
 
-        ra.col = function () {
-            if (arguments.length === 1)
-                return col(this, arguments[0]);
-            else if (arguments.length > 1)
-                return col(this, arguments[0], arguments[1]);
+        ra.col = function (i, col) {
+            checkInteger(i, 1);
+
+            if (arguments.length === 1) {
+                i = i - 1;
+
+                col = [];
+
+                for (var j = 0; j < this.m; j++)
+                    col[j] = this[j * this.n + i];
+
+                return col;
+            } else {
+                if (arguments.length == 2)
+                    checkArray(col)
+                else if (arguments.length > 2)
+                    col = slice(arguments, 1);
+
+                i = i - 1;
+
+                if (i >= this.n) {
+                    var n = i + 1;
+
+                    for (var _j = this.m - 1; _j >= 0; _j--)
+                        for (var _i = n - 1; _i >= 0; _i--)
+                            if (_i < this.n) this[_j * n + _i] = this[_j * this.n + _i];
+                            else delete this[_j * n + _i];
+
+                    this.n = n;
+                }
+
+                col.length > this.m && (this.m = col.length);
+
+                for (var j = 0; j < col.length; j++)
+                    this[j * this.n + i] = col[j];
+            }
         };
 
         ra.transpose = function () {
-            return transpose(this);
+            var tra = create(this.n, this.m);
+
+            for (var j = 0; j < this.m; j++)
+                for (var i = 0; i < this.n; i++)
+                    tra[i * tra.n + j] = this[j * this.n + i];
+
+            return tra;
         };
 
         ra.fill = function (ra) {
-            fill(this, ra);
+            checkArray(ra);
+
+            this.m < ra.m && (this.m = ra.m);
+            this.n < ra.n && (this.n = ra.n);
+
+            for (var j = 0; j < this.m; j++)
+                for (var i = 0; i < this.n; i++)
+                    this[j * this.n + i] = ra[j * this.n + i];
         };
 
         ra.toString = function () {
-            return toString(this);
+            var string = '';
+
+            if (this.m || this.n) {
+                var value;
+
+                for (var j = 0; j < this.m; j++) {
+                    for (var i = 0; i < this.n; i++) {
+                        i == 0 && (string += '[');
+
+                        value = this[j * this.n + i];
+                        string += value == undefined ? ' ' : value;
+
+                        i < this.n - 1 && (string += '\t');
+                        i === this.n - 1 && (string += ']');
+                    }
+
+                    j < this.m - 1 && (string += '\n');
+                }
+            } else string = '[]';
+
+            return string;
+        };
+
+        ra.val = function val(i, j, value) {
+            checkInteger(i, 1);
+            checkInteger(j, 1);
+
+            if (arguments.length === 2)
+                return this[j * this.n + i];
+            else if (arguments.length === 3) {
+                if (i >= this.n) {
+                    var n = i + 1;
+
+                    for (var _j = this.m - 1; _j >= 0; _j--)
+                        for (var _i = n - 1; _i >= 0; _i--)
+                            if (_i < this.n) this[_j * n + _i] = this[_j * this.n + _i];
+                            else delete this[_j * n + _i];
+
+                    this.n = n;
+                }
+
+                j >= this.m && (this.m = j + 1);
+
+                this[j * this.n + i] = value;
+            }
         };
 
         return ra;
     }
 
-    function row() {
-        if (arguments.length === 2) {
-            var ra = arguments[0], j = arguments[1];
+    function fillFromArrayOfArrays(ra, aoa) {
+        checkArray(ra);
+        checkArray(aoa);
 
-            var row = [];
+        var row;
 
-            for (var i = 0; i < ra.n; i++)
-                row[i] = ra[i + j * ra.n];
+        for (var j = 0; j < ra.m; j++) {
+            row = aoa[j];
 
-            return row;
-        } else if (arguments.length > 2) {
-            var ra = arguments[0], tj = arguments[1], row = arguments[2];
-
-            if (row.length > ra.n) {
-                var n = row.length;
-
-                for (var j = ra.m - 1; j >= 0; j--)
-                    for (var i = n - 1; i >= 0; i--)
-                        if (i >= ra.n) ra[j * n + i] = undefined;
-                        else ra[j * n + i] = ra[j * ra.n + i];
-
-                ra.n = n;
-            }
-
-            tj >= ra.m && (ra.m = tj + 1);
+            checkArray(row);
 
             for (var i = 0; i < row.length; i++)
-                ra[i + tj * ra.n] = row[i];
+                ra[j * ra.n + i] = row[i];
         }
-    }
 
-    function col() {
-        if (arguments.length === 2) {
-            var ra = arguments[0], i = arguments[1];
-            var col = [];
-
-            for (var j = 0; j < ra.m; j++)
-                col[j] = ra[j * ra.n + i];
-
-            return col;
-        } else if (arguments.length > 2) {
-            var ra = arguments[0], ti = arguments[1], col = arguments[2];
-
-            if (ti >= ra.n) {
-                var n = ti + 1
-
-                for (var j = ra.m - 1; j >= 0; j--)
-                    for (var i = n - 1; i >= 0; i--)
-                        if (i >= ra.n) ra[j * n + i] = undefined;
-                        else ra[j * n + i] = ra[j * ra.n + i];
-
-                ra.n = n;
-            }
-
-            col.length > ra.m && (ra.m = col.length);
-
-            for (var j = 0; j < col.length; j++)
-                ra[j * ra.n + ti] = col[j];
-        }
-    }
-
-    function transpose(ra) {
-        var tra = create(ra.n, ra.m);
-
-        for (var j = 0; j < ra.m; j++)
-            for (var i = 0; i < ra.n; i++)
-                tra[i * tra.n + j] = ra[j * ra.n + i];
-
-        return tra;
-    }
-
-    function fill(ra, ra2) {
-        ra.m < ra2.m && (ra.m = ra2.m);
-        ra.n < ra2.n && (ra.n = ra2.n);
-
-        for (var j = 0; j < ra.m; j++)
-            for (var i = 0; i < ra.n; i++)
-                ra[j * ra.n + i] = ra2[j * ra.n + i];
-    }
-
-    function fillFromArrayOfArrays(ra, aoa) {
-        for (var j = 0; j < ra.m; j++)
-            for (var i = 0; i < ra.n; i++)
-                ra[j * ra.n + i] = aoa[j][i];
-    }
-
-    function toString(ra) {
-        var string = '';
-
-        if (ra.m || ra.n) {
-            var value;
-
-            for (var j = 0; j < ra.m; j++) {
-                for (var i = 0; i < ra.n; i++) {
-                    i == 0 && (string += '[');
-
-                    value = ra[j * ra.n + i];
-                    string += value == undefined ? ' ' : value;
-
-                    i < ra.n - 1 && (string += '\t');
-                    i === ra.n - 1 && (string += ']');
-                }
-
-                j < ra.m - 1 && (string += '\n');
-            }
-        } else string = '[]';
-
-        return string;
     }
 
     return function () {
@@ -166,12 +202,16 @@ var RectangularArray = (function () {
             return create(0, 0);
         if (arguments.length === 1) {
             var aoa = arguments[0];
+
+            checkArray(aoa);
+            checkArray(aoa[0]);
+
             var ra = create(aoa.length, aoa[0].length);
 
             fillFromArrayOfArrays(ra, aoa);
 
             return ra;
-        } else if (arguments.length > 1) {
+        } else if (arguments.length === 2) {
             return create(arguments[0], arguments[1]);
         }
     };

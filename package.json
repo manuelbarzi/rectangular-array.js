@@ -1,7 +1,7 @@
 {
   "name": "rectangular-array.js",
-  "version": "0.0.1",
-  "description": "Math operations with Array of Arrays (Matrix) in JavaScript.",
+  "version": "0.0.2",
+  "description": "Math operations with Rectangular Array (Matrix) in JavaScript.",
   "main": "rectangular-array.js",
   "scripts": {
   },

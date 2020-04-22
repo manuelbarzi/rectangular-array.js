@@ -6,12 +6,12 @@ console.log(matrix.toString());
 // [1	2	3]
 // [4	5	6]
 
-// retrieve column index 0
-console.log(matrix.col(0));
+// retrieve column index 1
+console.log(matrix.col(1));
 // [1, 4]
 
-// retrieve row index 0
-console.log(matrix.row(0));
+// retrieve row 1
+console.log(matrix.row(1));
 // [1, 2, 3]
 
 // create a new matrix by transposing the original into it and print it on the console
@@ -20,8 +20,9 @@ console.log(matrix.transpose().toString());
 // [2	5]
 // [3	6]
 
-// set row values at index 2
-console.log(matrix.row(2, [7, 8, 9]));
+// set values at row 3
+//console.log(matrix.row(3, [7, 8, 9]));
+console.log(matrix.row(3, 7, 8, 9));
 
 // print it on the console
 console.log(matrix.toString());
@@ -29,8 +30,9 @@ console.log(matrix.toString());
 // [4	5	6]
 // [7	8	9]
 
-// set column values at index 3 (add a new column if not already existing)
-console.log(matrix.col(3, [10, 10, 10]));
+// set values at column 4 (add a new column if not already existing)
+//console.log(matrix.col(4, [10, 10, 10]));
+console.log(matrix.col(4, 10, 10, 10));
 
 // print it on the console
 console.log(matrix.toString());
@@ -66,3 +68,24 @@ console.log(matrix3.toString());
 // [				]
 // [				]
 // [				]
+
+// set value at row 10, column 10
+matrix.val(10, 10, 123)
+
+// print it on the console
+console.log(matrix.toString())
+// [1	2	3	10	 	 	 	 	 	 	 ]
+// [4	5	6	10	 	 	 	 	 	 	 ]
+// [7	8	9	10	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	 ]
+// [ 	 	 	 	 	 	 	 	 	 	123]
+
+// get value from row 10, column 10
+console.log(matrix.val(10, 10))
+// 123
